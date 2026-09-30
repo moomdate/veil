@@ -66,6 +66,10 @@ CLI output, errors, and docs follow the same rules as the UI:
 - Commit messages follow [Conventional Commits](https://www.conventionalcommits.org)
   (`feat:`, `fix:`, `sec:`, `docs:`), which the changelog is built from.
 
+## Releasing
+
+See [docs/releasing.md](docs/releasing.md).
+
 ## Pull requests
 
 Keep them focused. Fill in the checklist in the template. CI runs tests on

@@ -1,0 +1,52 @@
+# Homebrew formula for Veil, built from source.
+#
+# This is a template: .github/workflows/release.yml fills in @VERSION@ and
+# @SHA256@ and pushes the result to github.com/moomdate/homebrew-tap.
+# Building from source (rather than shipping a prebuilt binary) means no
+# Gatekeeper quarantine workaround is needed, and the binary comes from the
+# tagged source you can inspect.
+class Veil < Formula
+  desc "Let AI agents use your secrets without seeing them"
+  homepage "https://github.com/moomdate/veil"
+  url "@URL@"
+  sha256 "@SHA256@"
+  license "Apache-2.0"
+  head "https://github.com/moomdate/veil.git", branch: "main"
+
+  depends_on "go" => :build
+
+  def install
+    # macOS needs cgo for the Keychain access list and Touch ID.
+    ENV["CGO_ENABLED"] = "1" if OS.mac?
+    system "go", "build", *std_go_args(ldflags: "-X main.version=#{version}"), "./cmd/veil"
+
+    # Hardened runtime stops other programs injecting code into Veil to read
+    # its key (see docs/threat-model.md). Veil would do this itself on first
+    # run; doing it here means it's protected from the start.
+    if OS.mac?
+      system "/usr/bin/codesign", "--sign", "-", "--force", "--options", "runtime", bin/"veil"
+    end
+
+    generate_completions_from_executable(bin/"veil", "completion")
+  end
+
+  def caveats
+    <<~EOS
+      Get started:
+        veil init              create your vault
+        veil add NAME          store a secret
+        veil connect claude    let Claude Code use it
+        veil ui                manage everything in your browser
+
+      After each upgrade, macOS may ask for your password so the new veil can
+      use its Keychain key. Allow it only right after you ran veil yourself.
+    EOS
+  end
+
+  test do
+    assert_match version.to_s, shell_output("#{bin}/veil --version")
+    # A fresh home has no vault; veil must say how to create one.
+    ENV["VEIL_HOME"] = testpath/"veil"
+    assert_match "veil init", shell_output("#{bin}/veil list 2>&1", 1)
+  end
+end

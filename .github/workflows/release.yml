@@ -8,6 +8,9 @@ permissions:
   contents: write
   id-token: write # keyless cosign signing
 
+env:
+  HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+
 jobs:
   release:
     # macOS: the darwin builds need cgo and codesign (see .goreleaser.yaml).
@@ -28,4 +31,10 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+      # Publishes packaging/homebrew/veil.rb.tmpl to moomdate/homebrew-tap.
+      # Skipped until the HOMEBREW_TAP_TOKEN secret exists.
+      - name: Update Homebrew tap
+        if: ${{ env.HOMEBREW_TAP_TOKEN != '' }}
+        env:
+          TAG: ${{ github.ref_name }}
+        run: packaging/homebrew/update-tap.sh

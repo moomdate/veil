@@ -63,6 +63,10 @@ output ของ CLI, error และเอกสาร ใช้กฎเดี
 - commit message ใช้ [Conventional Commits](https://www.conventionalcommits.org)
   (`feat:`, `fix:`, `sec:`, `docs:`) ซึ่งใช้สร้าง changelog
 
+## การออก Release
+
+ดู [docs/releasing.th.md](docs/releasing.th.md)
+
 ## Pull request
 
 ทำให้กระชับและมีเรื่องเดียว กรอก checklist ใน template ให้ครบ CI จะรันเทสบน Linux

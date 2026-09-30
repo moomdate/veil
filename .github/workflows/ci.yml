@@ -35,6 +35,8 @@ jobs:
       - uses: golangci/golangci-lint-action@v8
       - name: govulncheck
         run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+      - name: Homebrew formula renders and parses
+        run: packaging/homebrew/render.sh 0.0.0 https://example.com/v.tar.gz 0000000000000000000000000000000000000000000000000000000000000000 | ruby -c
 
   fuzz:
     runs-on: ubuntu-latest

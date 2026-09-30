@@ -58,16 +58,10 @@ signs:
     args: ["sign-blob", "--yes", "--output-signature=${signature}", "--output-certificate=${certificate}", "${artifact}"]
     artifacts: checksum
 
-brews:
-  - repository:
-      owner: moomdate
-      name: homebrew-tap
-      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
-    homepage: https://github.com/moomdate/veil
-    description: Let AI agents use your secrets without seeing them
-    license: Apache-2.0
-    test: |
-      system "#{bin}/veil", "--version"
+# Homebrew: a source-built formula is published by
+# packaging/homebrew/update-tap.sh from the release workflow, not by
+# GoReleaser (its `brews` section is deprecated, and a cask of this unsigned
+# binary would need a Gatekeeper quarantine workaround).
 
 changelog:
   use: github
