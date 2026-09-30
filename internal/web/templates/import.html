@@ -1,0 +1,64 @@
+{{define "content"}}{{$csrf := .CSRF}}{{$err := .Error}}{{with .Data}}
+<div class="head"><div><h1>Import from .env</h1><p>Move secrets out of a plain-text file and into Veil.</p></div></div>
+{{if $err}}<div class="alert" role="alert">{{$err}}</div>{{end}}
+
+{{if eq .Step "choose"}}
+<form class="card stack" method="post" action="/import/preview" autocomplete="off">
+  <input type="hidden" name="csrf" value="{{$csrf}}">
+  <div class="field">
+    <label class="label" for="path">Path to the file</label>
+    <input id="path" name="path" class="mono" placeholder="/Users/you/project/.env" value="{{.Path}}">
+  </div>
+  <p class="or">or</p>
+  <div class="field">
+    <label class="label" for="pasted">Paste its contents</label>
+    <textarea id="pasted" name="pasted" class="mono" rows="6" placeholder="STRIPE_SECRET_KEY=sk_test_..." spellcheck="false"></textarea>
+  </div>
+  <p class="hint">Nothing is saved yet. You'll review each secret first.</p>
+  <div class="actions"><button class="btn primary" type="submit">Review</button></div>
+</form>
+{{end}}
+
+{{if eq .Step "review"}}
+<form method="post" action="/import" class="stack">
+  <input type="hidden" name="csrf" value="{{$csrf}}">
+  {{if .FromFile}}<p class="muted">From <span class="mono">{{.FromFile}}</span></p>{{end}}
+  <div class="list import">
+    <div class="irow th" aria-hidden="true"><span></span><span>Name</span><span>Protection</span><span>Allowed websites</span></div>
+    {{range .Rows}}
+    <div class="irow{{if .Skip}} skipped{{end}}">
+      <span>{{if not .Skip}}<input type="checkbox" name="include_{{.Index}}" checked aria-label="Import {{.Name}}">{{end}}</span>
+      <span class="cell-name"><span class="name">{{.Name}}</span><span class="desc">{{if .Skip}}Skipped: {{.Skip}}{{else}}{{.Length}} characters{{if ne .Key .Name}} · was {{.Key}}{{end}}{{end}}</span></span>
+      {{if .Skip}}<span></span><span></span>{{else}}
+      <span><select name="tier_{{.Index}}" aria-label="Protection for {{.Name}}" data-row="{{.Index}}">
+        <option value="scoped" {{if eq .Tier "scoped"}}selected{{end}}>Scoped</option>
+        <option value="basic" {{if eq .Tier "basic"}}selected{{end}}>Basic</option>
+        <option value="guarded" {{if eq .Tier "guarded"}}selected{{end}}>Guarded</option>
+      </select></span>
+      <span><input name="domains_{{.Index}}" class="mono" value="{{.Domains}}" placeholder="api.example.com" aria-label="Allowed websites for {{.Name}}" data-domains="{{.Index}}"></span>
+      {{end}}
+    </div>
+    {{end}}
+  </div>
+  <p class="hint">Veil guessed the protection from each name. Scoped and Guarded secrets need at least one website.</p>
+  <div class="actions"><a class="btn ghost" href="/import">Start over</a><button class="btn primary" type="submit">Import selected</button></div>
+</form>
+{{end}}
+
+{{if eq .Step "done"}}
+<div class="card stack">
+  <h2>Imported {{len .Added}} secret(s)</h2>
+  <p class="mono">{{join .Added ", "}}</p>
+  {{if .FromFile}}
+  <p>The values are still in <span class="mono">{{.FromFile}}</span>, where any program can read them. Delete the file now that Veil has them?</p>
+  <form method="post" action="/import/delete-file" class="actions">
+    <input type="hidden" name="csrf" value="{{$csrf}}">
+    <button class="btn danger" type="submit">Delete the file</button>
+    <a class="btn ghost" href="/secrets">Keep it</a>
+  </form>
+  {{else}}
+  <div class="actions"><a class="btn primary" href="/secrets">See your secrets</a></div>
+  {{end}}
+</div>
+{{end}}
+{{end}}{{end}}
