@@ -1,0 +1,80 @@
+version: 2
+project_name: veil
+
+# Runs on a macOS runner: the macOS builds need cgo (Keychain access lists)
+# and must be signed with the hardened runtime. Linux builds cross-compile.
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: darwin
+    main: ./cmd/veil
+    binary: veil
+    goos: [darwin]
+    goarch: [amd64, arm64]
+    env:
+      - CGO_ENABLED=1
+      - >-
+        {{- if eq .Arch "amd64" }}CGO_CFLAGS=-arch x86_64{{ else }}CGO_CFLAGS=-arch arm64{{ end }}
+      - >-
+        {{- if eq .Arch "amd64" }}CGO_LDFLAGS=-arch x86_64{{ else }}CGO_LDFLAGS=-arch arm64{{ end }}
+    flags: [-trimpath]
+    ldflags: ["-s -w -X main.version={{ .Version }}"]
+    hooks:
+      post:
+        # Hardened runtime blocks code injection into Veil (see docs/threat-model.md).
+        - codesign --sign - --force --options runtime "{{ .Path }}"
+
+  - id: linux
+    main: ./cmd/veil
+    binary: veil
+    goos: [linux]
+    goarch: [amd64, arm64]
+    env: [CGO_ENABLED=0]
+    flags: [-trimpath]
+    ldflags: ["-s -w -X main.version={{ .Version }}"]
+
+archives:
+  - formats: [tar.gz]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - LICENSE
+      - README.md
+      - README.th.md
+
+checksum:
+  name_template: checksums.txt
+
+sboms:
+  - artifacts: archive
+
+signs:
+  # Keyless signing with Sigstore; verify with `cosign verify-blob`.
+  - cmd: cosign
+    signature: "${artifact}.sig"
+    certificate: "${artifact}.pem"
+    args: ["sign-blob", "--yes", "--output-signature=${signature}", "--output-certificate=${certificate}", "${artifact}"]
+    artifacts: checksum
+
+brews:
+  - repository:
+      owner: moomdate
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+    homepage: https://github.com/moomdate/veil
+    description: Let AI agents use your secrets without seeing them
+    license: Apache-2.0
+    test: |
+      system "#{bin}/veil", "--version"
+
+changelog:
+  use: github
+  groups:
+    - title: Security
+      regexp: '^.*?(sec|security)(\(.+\))??!?:.+$'
+    - title: Features
+      regexp: '^.*?feat(\(.+\))??!?:.+$'
+    - title: Fixes
+      regexp: '^.*?fix(\(.+\))??!?:.+$'

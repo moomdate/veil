@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf" content="{{.CSRF}}">
+<meta name="idle" content="{{.IdleSeconds}}">
+<title>{{.Title}} · Veil</title>
+<link rel="icon" href="/static/icon.svg">
+<link rel="stylesheet" href="/static/app.css">
+<script src="/static/app.js" defer></script>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/secrets">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4c3 2 13 2 16 0v9c0 4-4 7-8 8-4-1-8-4-8-8z"/><path d="M8 9c2 1 6 1 8 0"/></svg>
+    veil
+  </a>
+  <span class="spacer"></span>
+  <span class="lockstate"><span class="dot" aria-hidden="true"></span>Unlocked<span class="long"> · locks in <span id="autolock" class="mono"></span></span></span>
+  <form method="post" action="/lock">
+    <input type="hidden" name="csrf" value="{{.CSRF}}">
+    <button class="btn" type="submit">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      Lock
+    </button>
+  </form>
+</header>
+<div class="shell">
+  <nav class="side" aria-label="Sections">
+    <a class="navbtn" href="/secrets" {{if eq .Nav "secrets"}}aria-current="page"{{end}}>Secrets</a>
+    <a class="navbtn" href="/activity" {{if eq .Nav "activity"}}aria-current="page"{{end}}>Activity</a>
+    <a class="navbtn" href="/agents" {{if eq .Nav "agents"}}aria-current="page"{{end}}>Agents</a>
+    <a class="navbtn" href="/import" {{if eq .Nav "import"}}aria-current="page"{{end}}>Import .env</a>
+  </nav>
+  <main id="main">
+    {{if .Flash}}<div class="toast" role="status">{{.Flash}}</div>{{end}}
+    {{template "content" .}}
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+version: "2"
+
+linters:
+  enable:
+    - errorlint
+    - gosec
+    - misspell
+    - revive
+    - unconvert
+    - forbidigo
+  settings:
+    forbidigo:
+      # Reveal() is the only way to read a secret's plaintext. Keep the call
+      # sites few and reviewed: vault (encryption), redact (building
+      # patterns), runner and httpinject (injection), web (showing a value
+      # after Touch ID). Anywhere else is a bug.
+      forbid:
+        - pattern: '\.Reveal$'
+          msg: "secret.Value.Reveal is only allowed in vault, redact, runner, httpinject and web; see CONTRIBUTING.md"
+      analyze-types: false
+    gosec:
+      excludes:
+        - G204 # running a user-chosen command is the point of `veil run`
+        - G304 # file paths come from the user's own config
+    revive:
+      rules:
+        - name: exported
+          disabled: true
+  exclusions:
+    presets:
+      - std-error-handling
+    rules:
+      - path: internal/(vault|redact|runner|httpinject|web)/
+        linters: [forbidigo]
+      - path: _test\.go
+        linters: [forbidigo, gosec]
+      # Redirect targets are always "/secrets/<name>", and validName rejects
+      # any name that isn't [A-Z][A-Z0-9_]* before a handler runs
+      # (tested in TestInvalidNamesRejected).
+      - path: internal/web/handlers\.go
+        text: G710
+        linters: [gosec]
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/moomdate/veil

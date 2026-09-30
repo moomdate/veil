@@ -1,0 +1,21 @@
+{{define "content"}}{{with .Data}}
+<div class="head"><div><h1>Activity</h1><p>Every time a secret is used, hidden, or blocked.</p></div></div>
+<nav class="filters" aria-label="Filter">
+  <a href="/activity" {{if eq .Filter "all"}}aria-current="true"{{end}}>All</a>
+  <a href="/activity?filter=attention" {{if eq .Filter "attention"}}aria-current="true"{{end}}>Needs a look</a>
+  <a href="/activity?filter=used" {{if eq .Filter "used"}}aria-current="true"{{end}}>Used</a>
+  <a href="/activity?filter=denied" {{if eq .Filter "denied"}}aria-current="true"{{end}}>Blocked</a>
+  <a href="/activity?filter=changed" {{if eq .Filter "changed"}}aria-current="true"{{end}}>Changes</a>
+</nav>
+<div class="feed">
+  {{range .Events}}
+  <div class="ev">
+    <time>{{.Time}}</time>
+    <div class="ev-body"><p>{{.Summary}}</p>{{if .Detail}}<p class="sub">{{.Detail}}</p>{{end}}</div>
+    <span class="chip {{.Kind}}">{{.Label}}</span>
+  </div>
+  {{else}}
+  <div class="empty">{{if .Total}}<p>Nothing matches this filter.</p>{{else}}<h2>Nothing yet</h2><p>When an agent uses a secret, or Veil blocks one, it shows up here.</p>{{end}}</div>
+  {{end}}
+</div>
+{{end}}{{end}}

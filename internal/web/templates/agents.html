@@ -1,0 +1,27 @@
+{{define "content"}}{{with .Data}}
+<div class="head"><div><h1>Agents</h1><p>Tools that have asked Veil to use your secrets.</p></div></div>
+{{if .Agents}}
+<div class="agents">
+  {{range .Agents}}
+  <div class="agent">
+    <h3>{{.Name}}</h3>
+    <dl class="kv">
+      <dt>Last active</dt><dd>{{.LastSeen}}</dd>
+      <dt>Uses (30 days)</dt><dd>{{.Uses}}</dd>
+      {{if .Secrets}}<dt>Used</dt><dd class="mono">{{.Secrets}}</dd>{{end}}
+      {{if .Blocked}}<dt>Blocked</dt><dd><a href="/activity?filter=denied">{{.Blocked}} time(s)</a></dd>{{end}}
+    </dl>
+  </div>
+  {{end}}
+</div>
+{{else}}
+<div class="list"><div class="empty"><h2>No agent has used Veil yet</h2><p>Connect one below, then ask it something like “list my secrets”.</p></div></div>
+{{end}}
+<h2 class="section">Connect an agent</h2>
+<p class="muted">Run one of these in your terminal.</p>
+<div class="connect">
+  <div class="cmd"><span class="label">Claude Code</span><pre class="code" data-copy>veil connect claude</pre></div>
+  <div class="cmd"><span class="label">Cursor</span><pre class="code" data-copy>veil connect cursor</pre></div>
+  <div class="cmd"><span class="label">Anything else that speaks MCP</span><pre class="code" data-copy>veil connect other</pre></div>
+</div>
+{{end}}{{end}}
