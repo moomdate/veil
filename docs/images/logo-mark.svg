@@ -1,4 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Veil">
   <path fill="#2f4f86" d="M6 9h14l12 33L44 9h14L39 55H25Z"/>
-  <path fill="#8fb0ea" d="m20 9 12 8 12-8-8 34-4 12-5-12Z"/>
+  <path fill="#8fb0ea" d="M20 9c4 5 8 7 12 7s8-2 12-7l-7 32c-1 6-3 11-5 14-3-4-5-9-6-14Z"/>
 </svg>

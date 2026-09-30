@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 202 64" role="img" aria-label="Veil">
+  <path fill="#8fb0ea" d="M6 9h14l12 33L44 9h14L39 55H25Z"/>
+  <path fill="#3a5a94" d="M20 9c4 5 8 7 12 7s8-2 12-7l-7 32c-1 6-3 11-5 14-3-4-5-9-6-14Z"/>
+  <path fill="#e6e9f0" fill-rule="evenodd" d="M73 21h10l9 25 9-25h10L97 55H87Zm39 17c0-11 7-18 18-18 12 0 18 8 18 20v4h-27c1 4 5 6 10 6 5 0 9-1 14-4v7c-4 3-9 4-15 4-11 0-18-8-18-19Zm9-1h18c-1-6-4-9-9-9s-8 3-9 9Zm34-16h9v34h-9Zm0-13h9v9h-9Zm18 0h9v47h-9Z"/>
+</svg>

@@ -1,8 +1,13 @@
-# Veil
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo-dark.svg">
+    <img src="docs/images/logo-light.svg" alt="Veil" height="64">
+  </picture>
+</p>
 
-**Let AI agents use your secrets without seeing them.**
+<p align="center"><b>Let AI agents use your secrets without seeing them.</b></p>
 
-[ภาษาไทย](README.th.md)
+<p align="center"><a href="README.th.md">ภาษาไทย</a> · <a href="docs/usage.md">Usage guide</a> · <a href="docs/threat-model.md">Threat model</a></p>
 
 AI coding agents need API keys and tokens to do real work. Today that usually
 means pasting keys into chat, or leaving them in `.env` files the agent can
@@ -56,6 +61,10 @@ Prefer clicking? `veil ui` opens a page in your browser to add, review and
 delete secrets, see what agents did, and import a `.env` file. It runs only on
 your computer and locks after 15 minutes. Showing a value, or letting a secret
 go somewhere new, asks for Touch ID or your password.
+
+![Veil's web page: a list of secrets with their protection level, where each can go, and when it was last used](docs/images/ui-secrets.jpg)
+
+See the [usage guide](docs/usage.md) for a full walkthrough with screenshots.
 
 Already have a `.env` file? `veil import .env` moves it into Veil and offers
 to delete the file.

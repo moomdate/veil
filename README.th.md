@@ -1,8 +1,13 @@
-# Veil
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo-dark.svg">
+    <img src="docs/images/logo-light.svg" alt="Veil" height="64">
+  </picture>
+</p>
 
-**ให้ AI agent ใช้ secret ของคุณได้ โดยไม่ต้องเห็นค่าจริง**
+<p align="center"><b>ให้ AI agent ใช้ secret ของคุณได้ โดยไม่ต้องเห็นค่าจริง</b></p>
 
-[English](README.md)
+<p align="center"><a href="README.md">English</a> · <a href="docs/usage.th.md">คู่มือการใช้งาน</a> · <a href="docs/threat-model.th.md">Threat model</a></p>
 
 AI coding agent ต้องใช้ API key และ token ถึงจะทำงานจริงได้ ทุกวันนี้วิธีที่ใช้กันส่วนใหญ่คือ
 แปะ key ลงในแชต หรือทิ้งไว้ในไฟล์ `.env` ที่ agent อ่านได้ ไม่ว่าทางไหน ค่าจริงก็ไปอยู่ใน
@@ -55,6 +60,10 @@ veil connect claude                         # or: cursor, other
 ดูว่า agent ทำอะไรไปบ้าง และ import ไฟล์ `.env` หน้านี้ทำงานบนเครื่องคุณเท่านั้น และล็อกตัวเอง
 หลังไม่มีการใช้งาน 15 นาที การแสดงค่าจริง หรือการอนุญาตให้ secret ถูกส่งไปที่ใหม่ จะต้องยืนยัน
 ด้วย Touch ID หรือรหัสผ่าน
+
+![หน้าเว็บของ Veil: รายการ secret พร้อมระดับการป้องกัน ปลายทางที่ส่งไปได้ และเวลาที่ใช้ล่าสุด](docs/images/ui-secrets.jpg)
+
+ดู[คู่มือการใช้งาน](docs/usage.th.md)สำหรับการใช้งานแบบทีละขั้นพร้อมภาพหน้าจอ
 
 มีไฟล์ `.env` อยู่แล้ว? `veil import .env` จะย้ายค่าเข้า Veil และเสนอให้ลบไฟล์ทิ้ง
 

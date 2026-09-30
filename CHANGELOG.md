@@ -16,6 +16,8 @@ All notable changes are listed here. This project follows
   where a secret may go needs Touch ID or your password.
 - `veil import FILE`: move secrets out of a `.env` file and delete it.
 - Activity entries now say "you" for your own actions.
+- New logo, and a usage guide with screenshots (`docs/usage.md`, Thai
+  `docs/usage.th.md`).
 
 ## v0.1.0
 
