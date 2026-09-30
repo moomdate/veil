@@ -32,13 +32,15 @@ Agent:  sees the response, never the key
 ## ติดตั้ง
 
 ```sh
-# From source (needs Go 1.26+, and Xcode command line tools on macOS)
-go install github.com/moomdate/veil/cmd/veil@latest
+# Homebrew (macOS, Linux): build จาก source ที่ติด tag
+brew install moomdate/tap/veil
 
-# Homebrew and prebuilt binaries arrive with the first tagged release.
+# หรือใช้ Go 1.26 ขึ้นไป (บน macOS ต้องมี Xcode command line tools)
+go install github.com/moomdate/veil/cmd/veil@latest
 ```
 
-Homebrew และ binary สำเร็จรูปจะมาพร้อม release แรกที่ติด tag
+binary สำเร็จรูปพร้อม checksum, SBOM และลายเซ็น cosign ดาวน์โหลดได้ที่
+[หน้า releases](https://github.com/moomdate/veil/releases)
 
 บน macOS คำสั่ง `veil` ครั้งแรกจะ sign ตัว binary ด้วย hardened runtime เพื่อไม่ให้โปรแกรมอื่น
 แทรกโค้ดเข้าไปได้ (ไม่ต้องมีบัญชี Apple) หลังจากนั้น macOS อาจถามรหัสผ่านหนึ่งครั้งเพื่ออนุญาต

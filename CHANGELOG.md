@@ -3,7 +3,7 @@
 All notable changes are listed here. This project follows
 [Semantic Versioning](https://semver.org).
 
-## Unreleased: v0.2.0
+## v0.2.0 (2026-09-30)
 
 - **Security:** on macOS the master key is stored with a Keychain access
   list that trusts only the Veil binary. Other programs, including
@@ -19,7 +19,7 @@ All notable changes are listed here. This project follows
 - New logo, and a usage guide with screenshots (`docs/usage.md`, Thai
   `docs/usage.th.md`).
 
-## v0.1.0
+## v0.1.0 (2026-09-30, not released separately)
 
 First version.
 

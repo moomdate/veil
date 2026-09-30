@@ -34,11 +34,15 @@ Agent:  sees the response, never the key
 ## Install
 
 ```sh
-# From source (needs Go 1.26+, and Xcode command line tools on macOS)
-go install github.com/moomdate/veil/cmd/veil@latest
+# Homebrew (macOS, Linux): builds from the tagged source
+brew install moomdate/tap/veil
 
-# Homebrew and prebuilt binaries arrive with the first tagged release.
+# Or with Go 1.26+ (and Xcode command line tools on macOS)
+go install github.com/moomdate/veil/cmd/veil@latest
 ```
+
+Prebuilt binaries with checksums, an SBOM and cosign signatures are on the
+[releases page](https://github.com/moomdate/veil/releases).
 
 On macOS, the first `veil` command signs the binary with the hardened
 runtime so no other program can inject code into it (no Apple account
