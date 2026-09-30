@@ -136,6 +136,24 @@ func TestSecurityHeaders(t *testing.T) {
 	}
 }
 
+// Browsers send the page's origin on its own form posts only if the
+// Referrer-Policy allows it; with no-referrer they send "Origin: null".
+func TestOwnFormsPassOriginCheck(t *testing.T) {
+	f := setup(t)
+	f.login()
+	resp := f.do("GET", "/secrets", nil, nil)
+	if p := resp.Header.Get("Referrer-Policy"); p != "same-origin" {
+		t.Fatalf("Referrer-Policy = %q; browsers would send Origin: null and break every form", p)
+	}
+	form := url.Values{"csrf": {f.csrf}, "name": {"FORM_KEY"}, "value": {"value-123456"}, "tier": {"basic"}}
+	if resp := f.do("POST", "/secrets", form, map[string]string{"Origin": f.base}); resp.StatusCode != http.StatusSeeOther {
+		t.Fatalf("same-origin form post: status %d", resp.StatusCode)
+	}
+	if resp := f.do("POST", "/secrets", form, map[string]string{"Origin": "null"}); resp.StatusCode != http.StatusForbidden {
+		t.Fatalf("Origin: null must still be refused: status %d", resp.StatusCode)
+	}
+}
+
 func TestWrongHostRefused(t *testing.T) {
 	f := setup(t)
 	resp := f.do("GET", f.loginURL, nil, map[string]string{"Host": "evil.example:80"})

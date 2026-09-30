@@ -349,6 +349,9 @@ func (s *Server) deleteSecret(w http.ResponseWriter, r *http.Request) {
 }
 
 func presenceMessage(err error, action string) string {
+	if errors.Is(err, presence.ErrTimedOut) {
+		return "No answer within a minute, so Veil didn't " + action + ". Try again when you're at your Mac."
+	}
 	if errors.Is(err, presence.ErrUnavailable) {
 		return "This computer can't confirm it's you, so the web page can't " + action + ". Use `veil add --update` in your terminal instead."
 	}

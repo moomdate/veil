@@ -53,6 +53,10 @@
   const hosts = { ANTHROPIC: "api.anthropic.com", OPENAI: "api.openai.com", STRIPE: "api.stripe.com", GITHUB: "api.github.com",
     GITLAB: "gitlab.com", CLOUDFLARE: "api.cloudflare.com", VERCEL: "api.vercel.com", SLACK: "slack.com", LINEAR: "api.linear.app",
     NOTION: "api.notion.com", SENDGRID: "api.sendgrid.com", TWILIO: "api.twilio.com", AWS: "*.amazonaws.com" };
+  const label = { ANTHROPIC: "Anthropic", OPENAI: "OpenAI", STRIPE: "Stripe", GITHUB: "GitHub", GITLAB: "GitLab",
+    CLOUDFLARE: "Cloudflare", VERCEL: "Vercel", SLACK: "Slack", LINEAR: "Linear", NOTION: "Notion", SENDGRID: "SendGrid",
+    TWILIO: "Twilio", AWS: "AWS" };
+  const article = (w) => (/^[AEIOU]/i.test(w) ? "an" : "a");
   const domains = $("#fDomains");
   const suggest = $("#suggest");
   const showSuggestion = () => {
@@ -62,7 +66,7 @@
     const host = key && hosts[key];
     suggest.textContent = "";
     if (!host || domains.value.includes(host)) return;
-    suggest.append(`Looks like a ${key[0] + key.slice(1).toLowerCase()} key. `);
+    suggest.append(`Looks like ${article(label[key])} ${label[key]} key. `);
     const b = document.createElement("button");
     b.type = "button"; b.className = "link"; b.textContent = `Add ${host}`;
     b.onclick = () => { domains.value = domains.value.trim() ? `${domains.value.trim()}, ${host}` : host; showSuggestion(); };

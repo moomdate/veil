@@ -4,13 +4,23 @@
 // Veil (an agent calling the web UI with curl, for example) can't pass it.
 package presence
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
 
 // ErrUnavailable means this system has no way to confirm presence.
 var ErrUnavailable = errors.New("confirming it's you isn't available on this system, so this action is turned off")
 
 // ErrCanceled means the person declined or the check failed.
 var ErrCanceled = errors.New("not confirmed")
+
+// ErrTimedOut means nobody answered the prompt in time.
+var ErrTimedOut = errors.New("no answer in time")
+
+// Timeout is how long a prompt waits for an answer before it is dismissed,
+// so an unanswered prompt can't block later ones forever.
+const Timeout = 60 * time.Second
 
 // Checker confirms that the user is present.
 type Checker interface {

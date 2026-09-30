@@ -13,8 +13,9 @@ static int veil_can_confirm(void) {
 	return [ctx canEvaluatePolicy:LAPolicyDeviceOwnerAuthentication error:nil] ? 1 : 0;
 }
 
-// veil_confirm returns 1 if the user confirmed, 0 if not.
-static int veil_confirm(const char *reason) {
+// veil_confirm returns 1 if the user confirmed, 0 if not, and -1 if
+// nobody answered within timeout_sec (the prompt is then dismissed).
+static int veil_confirm(const char *reason, int timeout_sec) {
 	LAContext *ctx = [[LAContext alloc] init];
 	NSString *why = [NSString stringWithUTF8String:reason];
 	dispatch_semaphore_t done = dispatch_semaphore_create(0);
@@ -25,7 +26,10 @@ static int veil_confirm(const char *reason) {
 		ok = success ? 1 : 0;
 		dispatch_semaphore_signal(done);
 	}];
-	dispatch_semaphore_wait(done, DISPATCH_TIME_FOREVER);
+	if (dispatch_semaphore_wait(done, dispatch_time(DISPATCH_TIME_NOW, (int64_t)timeout_sec * NSEC_PER_SEC)) != 0) {
+		[ctx invalidate];
+		return -1;
+	}
 	return ok;
 }
 */
@@ -50,8 +54,11 @@ func (s *System) Confirm(reason string) error {
 	}
 	cr := C.CString(reason)
 	defer C.free(unsafe.Pointer(cr))
-	if C.veil_confirm(cr) != 1 {
-		return ErrCanceled
+	switch C.veil_confirm(cr, C.int(Timeout.Seconds())) {
+	case 1:
+		return nil
+	case -1:
+		return ErrTimedOut
 	}
-	return nil
+	return ErrCanceled
 }
