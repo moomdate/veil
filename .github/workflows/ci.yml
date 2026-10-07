@@ -47,7 +47,7 @@ jobs:
           go-version-file: go.mod
       - name: Fuzz the redactor
         run: go test ./internal/redact -run '^$' -fuzz FuzzNeverLeaks -fuzztime ${{ github.event_name == 'schedule' && '20m' || '1m' }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: fuzz-crashers
